@@ -1,6 +1,5 @@
 package com.sqlite.test.dele.Quiza.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Scanner;
 

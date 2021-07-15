@@ -14,19 +14,6 @@ import com.sqlite.test.dele.Quiza.pojo.Quiz;
 
 public class Services {
 	
-	/**
-	 * 
-	 * CREATE A QUIZ
-	 * LIST QUIZZES
-	 * CREATE A QUESTION AND ATTACH TO A QUIZ
-	 * REMOVE QUESTION
-	 * REMOVE QUIZ
-	 * 		// -> QUESTIONS ***
-	 * 
-	 * RETRIEVE QUIZ AND ITS QUESTIONS
-	 * 
-	 */
-	
 	private Model model;
 	private Map<String, String> map;
 	private JSONArray arr;
@@ -39,6 +26,7 @@ public class Services {
 		createAll();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public int createQuiz(Quiz quiz) throws SQLException {
 		clear();
 		map.put("code", quiz.getCode());
@@ -98,6 +86,7 @@ public class Services {
 		return questions;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public int createQuestion(Questions questions) throws SQLException {
 		clear();
 		map.put("quiz_code", questions.getQuiz_code());
@@ -128,6 +117,7 @@ public class Services {
 		createQuestionTable();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void createQuizTable() {
 		clear();
 		map.put("code", "TEXT NOT NULL");
@@ -143,6 +133,7 @@ public class Services {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void createQuestionTable() {
 		clear();
 		map.put("quiz_code", "TEXT NOT NULL");

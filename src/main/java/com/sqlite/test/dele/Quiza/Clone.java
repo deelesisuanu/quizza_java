@@ -131,7 +131,6 @@ public class Clone {
 	private void displayUserQuestions(String quizName, String quizCode) {
 		try {
 			ArrayList<Questions> questionList = services.allQuestions(quizCode);
-			int loopIndex = 1;
 			for (Questions question : questionList) {
 				scanner = new Scanner(System.in);
 				String userQuestion = question.getQuestion();
@@ -153,7 +152,6 @@ public class Clone {
 				String showMessage = "YOU ARE ";
 				showMessage += ( ( userInputtedAnswer.equals(userAnswer) ) ? "CORRECT" : "WRONG" );
 				helper.outputMessage(showMessage, false);
-				loopIndex++;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -48,7 +48,6 @@ public class Model {
 		}
 		statement = connection.createStatement();
 		statement.executeUpdate(sql);
-		helper.outputMessage(tableName.toUpperCase() + ":: Table Created Successfully!!", true);
 		statement.close();
 	}
 	
@@ -143,5 +142,4 @@ public class Model {
 		return (ResultSet) preparedStatement.executeQuery();
 	}
 	
-
 }
