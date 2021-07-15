@@ -2,6 +2,7 @@ package com.sqlite.test.dele.Quiza.model;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Helper {
 	
@@ -49,11 +50,22 @@ public class Helper {
 		return date.toString();
 	}
 	
-//	public String currentTimeStamp() {
-//		Date date = new Date();
-//		return new Timestamp(date.getTime()).toString();
-//	}
-
+	public String buildQuestionObject(Scanner scanner, String displayMsg) {
+		outputMessage(displayMsg, false);
+		String built = scanner.nextLine();
+		built = built.replace(" ", "_");
+		return built;
+	}
+	
+	public String getIndexValue(int position, String[] arr) {
+		if(arr.length > position && arr[position] != null) {
+			for (int i = 0; i < arr.length; i++) {
+				if(position == i) return arr[i];
+			}
+		}
+		return "";
+	}
+	
 	public void closeApp() {
 		System.exit(0);
 	}

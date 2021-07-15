@@ -2,6 +2,7 @@ package controllers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +53,52 @@ public class Services {
 		return model.getTableData(table, selectCols, where, whereArray);
 	}
 	
-	public void createQuestion(Questions questions) {
+	public Quiz getQuiz(int findIndex) throws SQLException {
+		Quiz quiz = new Quiz();
+		String[] cols = {"*"};
+		ResultSet result = listOptions(Tables.quiz.name(), cols, false, null);
+		int index = 1;
+		while(result.next()) {
+			String code = result.getString("code");
+			String name = result.getString("name");
+			String numQuestions = result.getString("num_questions");
+			String timestamp = result.getString("timestamp");
+			if(index == findIndex) {
+				quiz.setCode(code);
+				quiz.setName(name);
+				quiz.setNum_questions(numQuestions);
+				quiz.setTimestamp(timestamp);
+			}
+			index++;
+		}
+		return quiz;
+	}
+	
+	public ArrayList<Questions> allQuestions(String quizCode) throws SQLException {
+		ArrayList<Questions> questions = new ArrayList<Questions>();
+		String[] cols = {"*"};
+		ResultSet result = listOptions(Tables.questions.name(), cols, false, null);
+		while(result.next()) {
+			String quiz_code = result.getString("quiz_code");
+			String question = result.getString("question");
+			question = question.replace("_", " ");
+			String option1 = result.getString("option1");
+			option1 = option1.replace("_", " ");
+			String option2 = result.getString("option2");
+			option2 = option2.replace("_", " ");
+			String option3 = result.getString("option3");
+			option3 = option3.replace("_", " ");
+			String option4 = result.getString("option4");
+			option4 = option4.replace("_", " ");
+			String answer = result.getString("answer");
+			answer = answer.replace("_", " ");
+			Questions questionObj = new Questions(quiz_code, question, option1, option2, option3, option4, answer);
+			questions.add(questionObj);
+		}
+		return questions;
+	}
+	
+	public int createQuestion(Questions questions) throws SQLException {
 		clear();
 		map.put("quiz_code", questions.getQuiz_code());
 		map.put("question", questions.getQuestion());
@@ -62,13 +108,7 @@ public class Services {
 		map.put("option4", questions.getOption4());
 		map.put("answer", questions.getAnswer());
 		arr.add(map);
-		try {
-			int isCreated = model.insertToTable(Tables.questions.name(), arr);
-			if(isCreated <= 0) helper.outputMessage("There was a problem with this transaction", true);
-			else helper.outputMessage("Question Created Successfully", false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		return model.insertToTable(Tables.questions.name(), arr);
 	}
 	
 	public void removeQuiz() {
