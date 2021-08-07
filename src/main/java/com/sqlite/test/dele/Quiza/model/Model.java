@@ -89,10 +89,114 @@ public class Model {
 		return statement.executeUpdate(sql);
 	}
 	
-	public void updateTableData() {
+	public int updateTableData(String tableName, JSONArray array, boolean where, JSONArray whereArray) throws SQLException {
+		where = true;
+		String sql = "UPDATE " + tableName + " SET ";
+		statement = null;
+		int length = array.size();
+		if(length > 0) {
+			for (int i = 0; i < length; i++) {
+				String query = array.get(i).toString();
+				query = helper.removeFirstandLast(query);
+				query = query.replace(",", "");
+				query = query.replace(" ", ";");
+				String[] queryParts = query.split("\\;");
+				int queryLength = queryParts.length;
+				String[] innerQuery = new String[queryLength];
+				int innerCount = 0;
+				for (int j = 0; j < queryLength; j++) {
+					innerQuery[innerCount] = queryParts[j];
+					innerCount++;
+				}
+				int innerQueryLength = innerQuery.length;
+				for (int k = 0; k < innerQueryLength; k++) {
+					String start = StringUtils.substringBefore(innerQuery[k], "=");
+					String end = StringUtils.substringAfter(innerQuery[k], "=");
+					sql += start + " = '" + end + "'";
+					if(k == innerQueryLength - 1);
+					else sql += ", ";
+				}
+			}
+		}
+		List<String> ending = new ArrayList<String>();
+		if(where) {
+			sql += " WHERE ";
+			int whereSize = whereArray.size();
+			for (int i = 0; i < whereSize; i++) {
+				String query = whereArray.get(i).toString();
+				query = helper.removeFirstandLast(query);
+				query = query.replace(",", "");
+				query = query.replace(" ", ";");
+				String[] queryParts = query.split("\\;");
+				int queryLength = queryParts.length;
+				String[] innerQuery = new String[queryLength];
+				int innerCount = 0;
+				for (int j = 0; j < queryLength; j++) {
+					innerQuery[innerCount] = queryParts[j];
+					innerCount++;
+				}
+				int innerQueryLength = innerQuery.length;
+				for (int k = 0; k < innerQueryLength; k++) {
+					String start = StringUtils.substringBefore(innerQuery[k], "=");
+					sql += start + " = ?";
+					if(k == innerQueryLength - 1) sql += "";
+					else sql += " AND ";
+				}
+				for (int l = 0; l < innerQueryLength; l++) {
+					String end = StringUtils.substringAfter(innerQuery[l], "=");
+					ending.add(end);
+				}
+			}
+		}
+		preparedStatement = connection.prepareStatement(sql);
+		int index = 1;
+		for (int i = 0; i < ending.size(); i++) {
+			String string = ending.get(i);
+			preparedStatement.setString(index, string);
+		}
+		helper.outputMessage(sql, false);
+		return preparedStatement.executeUpdate();
 	}
 	
-	public void removeFromTable(String tableName) {
+	public int removeFromTable(String tableName, boolean where, JSONArray whereArray) throws SQLException {
+		String sql = "DELETE FROM " + tableName;
+		List<String> ending = new ArrayList<String>();
+		if(where) {
+			sql += " WHERE ";
+			int whereSize = whereArray.size();
+			for (int i = 0; i < whereSize; i++) {
+				String query = whereArray.get(i).toString();
+				query = helper.removeFirstandLast(query);
+				query = query.replace(",", "");
+				query = query.replace(" ", ";");
+				String[] queryParts = query.split("\\;");
+				int queryLength = queryParts.length;
+				String[] innerQuery = new String[queryLength];
+				int innerCount = 0;
+				for (int j = 0; j < queryLength; j++) {
+					innerQuery[innerCount] = queryParts[j];
+					innerCount++;
+				}
+				int innerQueryLength = innerQuery.length;
+				for (int k = 0; k < innerQueryLength; k++) {
+					String start = StringUtils.substringBefore(innerQuery[k], "=");
+					sql += start + " = ?";
+					if(k == innerQueryLength - 1) sql += "";
+					else sql += " AND ";
+				}
+				for (int l = 0; l < innerQueryLength; l++) {
+					String end = StringUtils.substringAfter(innerQuery[l], "=");
+					ending.add(end);
+				}
+			}
+		}
+		preparedStatement = connection.prepareStatement(sql);
+		int index = 1;
+		for (int i = 0; i < ending.size(); i++) {
+			String string = ending.get(i);
+			preparedStatement.setString(index, string);
+		}
+		return preparedStatement.executeUpdate();
 	}
 	
 	public ResultSet getTableData(String tableName, String[] selectCols, boolean where, JSONArray whereArray) throws SQLException {

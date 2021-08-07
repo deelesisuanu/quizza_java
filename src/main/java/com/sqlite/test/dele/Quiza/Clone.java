@@ -3,9 +3,14 @@ package com.sqlite.test.dele.Quiza;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
+import org.json.simple.JSONArray;
+
 import com.sqlite.test.dele.Quiza.model.Helper;
+import com.sqlite.test.dele.Quiza.model.Model;
 import com.sqlite.test.dele.Quiza.pojo.Questions;
 import com.sqlite.test.dele.Quiza.pojo.Quiz;
 
@@ -22,8 +27,46 @@ public class Clone {
 		services = new Services();
 		helper = new Helper();
 	}
-
-	public void runAp() {
+	
+	@SuppressWarnings("unchecked")
+	private void runSame() {
+		Model model = new Model("quizza");
+		Map<String, String> map = new HashMap<String, String>();
+    	JSONArray arr = new JSONArray();
+    	try {
+			map.put("name", "dvd");
+			arr.add(map);
+			Map<String, String> obj = new HashMap<String, String>();
+	    	obj.put("name", "John");
+	    	JSONArray where_arr = new JSONArray();
+	    	where_arr.add(obj);
+			model.updateTableData(Tables.quiz.name(), arr, true, where_arr);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void dummyRemove() {
+		Model model = new Model("quizza");
+		Map<String, String> obj = new HashMap<String, String>();
+    	obj.put("code", "John");
+    	obj.put("name", "moses_john@gmail.com");
+    	JSONArray arr = new JSONArray();
+    	arr.add(obj);
+    	try {
+			int updated = model.removeFromTable(Tables.quiz.name(), false, arr);
+			if(updated >= 1) {
+				// success
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void runApp() {
 		scanner = new Scanner(System.in);
 		helper.outputMessage("Welcome to " + helper.getAppName(), false);
 		helper.outputMessage(">>>>>>>>>>>>>>>>>>", false);
@@ -43,7 +86,7 @@ public class Clone {
 		}
 	}
 
-	public void priveledges() {
+	private void priveledges() {
 		scanner = new Scanner(System.in);
 		helper.outputMessage("\nEnter Your Access Token", true);
 		try {
@@ -73,7 +116,7 @@ public class Clone {
 		}
 	}
 
-	public void createQuiz() {
+	private void createQuiz() {
 		scanner = new Scanner(System.in);
 		helper.outputMessage("Enter Quiz Name:", true);
 		String quizName = scanner.nextLine();
@@ -106,7 +149,7 @@ public class Clone {
 		}
 	}
 
-	public void viewQuizzes(int switcher) {
+	private void viewQuizzes(int switcher) {
 		scanner = new Scanner(System.in);
 		displayQuizOptions();
 		helper.outputMessage("Please Choose any of the above:", false);
@@ -153,6 +196,7 @@ public class Clone {
 				showMessage += ( ( userInputtedAnswer.equals(userAnswer) ) ? "CORRECT" : "WRONG" );
 				helper.outputMessage(showMessage, false);
 			}
+			// SAVE THE REPORT
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

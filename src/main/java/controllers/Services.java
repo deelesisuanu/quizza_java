@@ -24,6 +24,7 @@ public class Services {
 		map = new HashMap<String, String>();
 		arr = new JSONArray();
 		createAll();
+		System.out.println("I CAN ACCESS THIS");
 	}
 	
 	@SuppressWarnings("unchecked")

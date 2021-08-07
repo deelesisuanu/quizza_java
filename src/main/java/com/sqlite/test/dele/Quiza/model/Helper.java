@@ -21,10 +21,8 @@ public class Helper {
 	}
 
 	public void outputMessage(String msg, boolean error) {
-		if (error)
-			System.err.println(msg);
-		else
-			System.out.println(msg);
+		if (error) System.err.println(msg);
+		else System.out.println(msg);
 	}
 
 	public String getAppName() {
